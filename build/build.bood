@@ -3,7 +3,7 @@ go_binary {
   name: "bood",
 
   // Go package to build.
-  pkg: "github.com/roman-mazur/design-practice-1-template/build/cmd/bood",
+  pkg: "github.com/MaryLynJuana/KPI_Assembly_System/build/cmd/bood",
 
   // Build inputs.
   srcs: ["**/*.go", "../go.mod"]

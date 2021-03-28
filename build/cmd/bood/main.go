@@ -9,9 +9,7 @@ import (
 
 	"github.com/google/blueprint"
 	"github.com/roman-mazur/bood"
-	"github.com/roman-mazur/bood/gomodule"
-	// TODO: Підставте свій власний пакет.
-	// "github.com/roman-mazur/design-practice-1-template/build/gomodule"
+	"github.com/MaryLynJuana/KPI_Assembly_System/build/gomodule"
 )
 
 var (
