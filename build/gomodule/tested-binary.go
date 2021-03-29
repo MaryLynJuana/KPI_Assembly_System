@@ -15,6 +15,11 @@ var (
 		Description: "build go command $pkg",
 	}, "workDir", "outputPath", "pkg")
 
+	goTest = pctx.StaticRule("binaryTest", blueprint.RuleParams{
+		Command:     "cd $workDir && go test  -v ${testPkg} > ${outputPath}/test.txt",
+		Description: "test go command $testPkg",
+	}, "workDir", "outputPath", "testPkg")
+
 	goVendor = pctx.StaticRule("vendor", blueprint.RuleParams{
 		Command:     "cd $workDir && go mod vendor",
 		Description: "vendor dependencies of $name",
@@ -28,6 +33,11 @@ type goTestedBinaryModuleType struct {
 		Pkg string
 		Srcs []string
 		SrcsExclude []string
+
+		TestPkg string
+		TestSrcs []string
+		TestSrcsExclude []string
+
 		VendorFirst bool
 
 		Deps []string
@@ -44,11 +54,13 @@ func (gtb *goTestedBinaryModuleType) GenerateBuildActions(ctx blueprint.ModuleCo
 	config.Debug.Printf("Adding build actions for go binary module '%s'", name)
 
 	outputPath := path.Join(config.BaseOutputDir, "bin", name)
+	testOutputPath := path.Join(config.BaseOutputDir, "reports", name)
 
 	var inputs []string
 	inputErors := false
 	for _, src := range gtb.properties.Srcs {
-		if matches, err := ctx.GlobWithDeps(src, gtb.properties.SrcsExclude); err == nil {
+		matches, err := ctx.GlobWithDeps(src, append(gtb.properties.SrcsExclude, gtb.properties.TestSrcs...))
+		if err == nil {
 			inputs = append(inputs, matches...)
 		} else {
 			ctx.PropertyErrorf("srcs", "Cannot resolve files that match pattern %s", src)
@@ -84,6 +96,29 @@ func (gtb *goTestedBinaryModuleType) GenerateBuildActions(ctx blueprint.ModuleCo
 			"outputPath": outputPath,
 			"workDir":    ctx.ModuleDir(),
 			"pkg":        gtb.properties.Pkg,
+		},
+	})
+
+	for _, testSrc := range gtb.properties.TestSrcs {
+		if matches, err := ctx.GlobWithDeps(testSrc, gtb.properties.TestSrcsExclude); err == nil {
+			inputs = append(inputs, matches...)
+		} else {
+			ctx.PropertyErrorf("testSrcs", "Cannot resolve files that match pattern %s", testSrc)
+			inputErors = true
+		}
+	}
+	if inputErors {
+		return
+	}
+	ctx.Build(pctx, blueprint.BuildParams{
+		Description: fmt.Sprintf("Test my module", name),
+		Rule:        goTest,
+		Outputs:     []string{testOutputPath},
+		Implicits:   inputs,
+		Args: map[string]string{
+			"outputPath": testOutputPath,
+			"workDir":    ctx.ModuleDir(),
+			"testPkg":    gtb.properties.TestPkg,
 		},
 	})
 

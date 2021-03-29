@@ -6,5 +6,11 @@ go_tested_binary {
   pkg: "github.com/MaryLynJuana/KPI_Assembly_System/build/cmd/bood",
 
   // Build inputs.
-  srcs: ["**/*.go", "../go.mod"]
+  srcs: ["**/*.go", "../go.mod"],
+
+  // Go package to test.
+  testPkg: "github.com/MaryLynJuana/KPI_Assembly_System/build/",
+
+  // Test inputs.
+  testSrcs: ["**/*_test.go"]
 }
