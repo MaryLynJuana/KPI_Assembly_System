@@ -3,13 +3,13 @@ go_tested_binary {
   name: "bood",
 
   // Go package to build.
-  pkg: "github.com/MaryLynJuana/KPI_Assembly_System/build/cmd/bood",
+  pkg: "./cmd/bood",
 
   // Build inputs.
   srcs: ["**/*.go", "../go.mod"],
 
   // Go package to test.
-  testPkg: "github.com/MaryLynJuana/KPI_Assembly_System/build/",
+  testPkg: "./...",
 
   // Test inputs.
   testSrcs: ["**/*_test.go"]

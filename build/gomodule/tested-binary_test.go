@@ -2,10 +2,11 @@ package gomodule
 
 import (
 	"bytes"
-	"github.com/google/blueprint"
-	"github.com/roman-mazur/bood"
 	"strings"
 	"testing"
+
+	"github.com/google/blueprint"
+	"github.com/roman-mazur/bood"
 )
 
 func TestSimpleBinFactory(t *testing.T) {
@@ -22,8 +23,8 @@ func TestSimpleBinFactory(t *testing.T) {
 	          vendorFirst: true
 			}
 		`),
-		"test-src.go": nil,
-		"test-src_test.go": nil
+		"test-src.go":      nil,
+		"test-src_test.go": nil,
 	})
 
 	ctx.RegisterModuleType("go_tested_binary", SimpleBinFactory)

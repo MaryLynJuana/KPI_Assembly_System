@@ -2,9 +2,10 @@ package gomodule
 
 import (
 	"fmt"
+	"path"
+
 	"github.com/google/blueprint"
 	"github.com/roman-mazur/bood"
-	"path"
 )
 
 var (
@@ -16,7 +17,7 @@ var (
 	}, "workDir", "outputPath", "pkg")
 
 	goTest = pctx.StaticRule("binaryTest", blueprint.RuleParams{
-		Command:     "cd $workDir && go test  -v ${testPkg} > ${outputPath}/test.txt",
+		Command:     "cd $workDir && mkdir ${outputPath} && go test  -v ${testPkg} > ${outputPath}/test.txt",
 		Description: "test go command $testPkg",
 	}, "workDir", "outputPath", "testPkg")
 
@@ -30,12 +31,12 @@ type goTestedBinaryModuleType struct {
 	blueprint.SimpleName
 
 	properties struct {
-		Pkg string
-		Srcs []string
+		Pkg         string
+		Srcs        []string
 		SrcsExclude []string
 
-		TestPkg string
-		TestSrcs []string
+		TestPkg         string
+		TestSrcs        []string
 		TestSrcsExclude []string
 
 		VendorFirst bool
@@ -111,7 +112,7 @@ func (gtb *goTestedBinaryModuleType) GenerateBuildActions(ctx blueprint.ModuleCo
 		return
 	}
 	ctx.Build(pctx, blueprint.BuildParams{
-		Description: fmt.Sprintf("Test my module", name),
+		Description: "Test my module",
 		Rule:        goTest,
 		Outputs:     []string{testOutputPath},
 		Implicits:   inputs,

@@ -7,9 +7,9 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/MaryLynJuana/KPI_Assembly_System/build/gomodule"
 	"github.com/google/blueprint"
 	"github.com/roman-mazur/bood"
-	"github.com/MaryLynJuana/KPI_Assembly_System/build/gomodule"
 )
 
 var (
