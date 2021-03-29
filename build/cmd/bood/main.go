@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/MaryLynJuana/KPI_Assembly_System/build/gomodule"
+	"github.com/MaryLynJuana/KPI_Assembly_System/build/modules/gomodule"
 	"github.com/google/blueprint"
 	"github.com/roman-mazur/bood"
 )
