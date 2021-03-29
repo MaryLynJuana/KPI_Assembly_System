@@ -9,7 +9,6 @@ import (
 
 	"github.com/MaryLynJuana/KPI_Assembly_System/build/modules/archive_bin"
 	"github.com/MaryLynJuana/KPI_Assembly_System/build/modules/gomodule"
-	"github.com/google/blueprint"
 	"github.com/roman-mazur/bood"
 )
 
@@ -18,14 +17,6 @@ var (
 	verbose = flag.Bool("v", false, "Display debugging logs")
 )
 
-func NewContext() *blueprint.Context {
-	ctx := bood.PrepareContext()
-	// TODO: Замініть імплементацію go_binary на власну.
-	ctx.RegisterModuleType("go_tested_binary", gomodule.SimpleBinFactory)
-	ctx.RegisterModuleType("go_archive_bin", archive_bin.Archive)
-	return ctx
-}
-
 func main() {
 	flag.Parse()
 
@@ -33,7 +24,10 @@ func main() {
 	if !*verbose {
 		config.Debug = log.New(ioutil.Discard, "", 0)
 	}
-	ctx := NewContext()
+
+	ctx := bood.PrepareContext()
+	ctx.RegisterModuleType("go_tested_binary", gomodule.SimpleBinFactory)
+	ctx.RegisterModuleType("go_archive_bin", archive_bin.Archive_binFactory)
 
 	ninjaBuildPath := bood.GenerateBuildFile(config, ctx)
 
