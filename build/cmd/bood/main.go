@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/MaryLynJuana/KPI_Assembly_System/build/modules/archive_bin"
 	"github.com/MaryLynJuana/KPI_Assembly_System/build/modules/gomodule"
 	"github.com/google/blueprint"
 	"github.com/roman-mazur/bood"
@@ -21,6 +22,7 @@ func NewContext() *blueprint.Context {
 	ctx := bood.PrepareContext()
 	// TODO: Замініть імплементацію go_binary на власну.
 	ctx.RegisterModuleType("go_tested_binary", gomodule.SimpleBinFactory)
+	ctx.RegisterModuleType("go_archive_bin", archive_bin.Archive)
 	return ctx
 }
 

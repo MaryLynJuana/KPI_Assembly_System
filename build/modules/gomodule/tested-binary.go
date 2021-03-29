@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	pctx = blueprint.NewPackageContext("github.com/MaryLynJuana/KPI_Assembly_System/build/gomodule")
+	pctx = blueprint.NewPackageContext("github.com/MaryLynJuana/KPI_Assembly_System/build/modules/gomodule")
 
 	goBuild = pctx.StaticRule("binaryBuild", blueprint.RuleParams{
 		Command:     "cd $workDir && go build -o $outputPath $pkg",
@@ -17,7 +17,7 @@ var (
 	}, "workDir", "outputPath", "pkg")
 
 	goTest = pctx.StaticRule("binaryTest", blueprint.RuleParams{
-		Command:     "cd $workDir && mkdir ${outputPath} && go test  -v ${testPkg} > ${outputPath}/test.txt",
+		Command:     "cd $workDir && mkdir ${outputPath} && go test -v ${testPkg} > ${outputPath}/test.txt",
 		Description: "test go command $testPkg",
 	}, "workDir", "outputPath", "testPkg")
 

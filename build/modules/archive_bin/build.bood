@@ -1,0 +1,9 @@
+go_binary {
+ name: “my-binary”,
+ pkg: “my/pkg“,
+ srcs: [“main.go”]
+}
+archive_bin {
+ name: “my-archive”,
+ binary: “my-binary”
+}
