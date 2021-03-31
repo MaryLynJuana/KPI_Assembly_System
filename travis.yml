@@ -1,0 +1,10 @@
+language: go
+
+go:
+- 1.15.x
+
+script:
+  - ./pre-commit
+  - cd build
+  - go build ./cmd/bood
+  - bood
