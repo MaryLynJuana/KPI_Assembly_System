@@ -8,3 +8,6 @@ script:
   - cd build
   - go build ./cmd/bood
   - bood
+  - cd ../examples
+  - go build ../build/cmd/bood
+  - bood
