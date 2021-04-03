@@ -4,7 +4,6 @@ go 1.15
 
 require (
 	github.com/google/blueprint v0.0.0-20200305182927-215230a3e856
-	github.com/jn-lp/se-lab21 v0.0.0-20210322064146-ba14458a06ca
 	github.com/roman-mazur/bood v0.0.6
 )
 
