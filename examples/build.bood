@@ -1,9 +1,9 @@
 go_tested_binary {
   // Module (and output) name.
-  name: "bood",
+  name: "simple_build_bin",
 
   // Go package to build.
-  pkg: "./...",
+  pkg: "./simple_build",
 
   // Build inputs.
   srcs: ["**/*.go", "../go.mod"],
@@ -16,8 +16,8 @@ go_tested_binary {
 }
 
 go_archive_bin {
-  // Name of the package and archive
-  name: "simple_build",
+  // Name of the archive
+  name: "my_archive",
 
   // Name of the binary to be generated
   binary: "simple_build_bin"

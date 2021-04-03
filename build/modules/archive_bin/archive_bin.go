@@ -1,11 +1,8 @@
 package archive_bin
 
 import (
-	"archive/zip"
 	"fmt"
-	"io"
 	"os"
-	"os/exec"
 	"path"
 
 	"github.com/google/blueprint"
@@ -13,104 +10,55 @@ import (
 )
 
 var (
-	pctx          = blueprint.NewPackageContext("github.com/MaryLynJuana/KPI_Assembly_System/tree/master/build/modules/archive_bin")
-	goArchive_bin = pctx.StaticRule("archive", blueprint.RuleParams{
-		Command:     "cd $workDir && go test ${pkg}",
-		Description: "generating test archive files",
-	}, "workDir", "pkg")
+	pctx = blueprint.NewPackageContext("github.com/MaryLynJuana/KPI_Assembly_System/tree/master/build/modules/archive_bin")
+
+	// goBuild = pctx.StaticRule("binaryBuild", blueprint.RuleParams{
+	// 	Command:     "cd $workDir && go build -o $outputPath ./$pkg",
+	// 	Description: "build go command $pkg",
+	// }, "workDir", "outputPath", "pkg")
+
+	goArchive = pctx.StaticRule("ZipArchiving", blueprint.RuleParams{
+		Command:     "cd $workDir && zip -r $zipName $fileName",
+		Description: "archiving command",
+	}, "workDir", "zipName", "fileName")
 )
 
-type archive_binMod struct {
+type goArchive_binModule struct {
 	blueprint.SimpleName
 
 	properties struct {
-		name   string
-		binary string
+		Name   string
+		Binary string
 	}
 }
 
-func (tb *archive_binMod) GenerateBuildActions(ctx blueprint.ModuleContext) {
+func (tb *goArchive_binModule) GenerateBuildActions(ctx blueprint.ModuleContext) {
 	config := bood.ExtractConfig(ctx)
-	config.Debug.Printf("Adding a build acction to generate the zip file for", tb.properties.name)
+	config.Debug.Print("Adding a build acction to generate the zip file for", tb.properties.Name)
 
-	archivePath := path.Join(config.BaseOutputDir, fmt.Sprintf("archives/%s.zip", tb.properties.name))
-	binaryPath := path.Join(config.BaseOutputDir, fmt.Sprintf("bin/%s", tb.properties.binary))
+	archivePath := path.Join(config.BaseOutputDir, fmt.Sprintf("archives/%s.zip", tb.properties.Name))
+	archiveDir := path.Join(config.BaseOutputDir, "archives")
+	binaryPath := path.Join(config.BaseOutputDir, fmt.Sprintf("bin/%s", tb.properties.Binary))
+	binaryDir := path.Join(config.BaseOutputDir, "bin")
 
-	// Generate the binary file first
-	cmd := exec.Command("go build -o " + binaryPath + " ./" + tb.properties.name)
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = os.Stdin
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		config.Info.Fatal("Error building the file")
-	}
-
-	// Then archive it
-	if err := ZipFiles(archivePath, []string{binaryPath}); err != nil {
-		panic(err)
-	}
+	// Troubleshoot Linux/GoLang badcode
+	os.MkdirAll(archiveDir, os.ModePerm)
+	os.MkdirAll(binaryDir, os.ModePerm)
+	os.Create(binaryPath)
 
 	ctx.Build(pctx, blueprint.BuildParams{
-		Description: fmt.Sprintf("Generating a zip archive", tb.properties.name),
-		Rule:        goArchive_bin,
+		Description: fmt.Sprint("Generating a zip archive for module ", tb.properties.Name),
+		Rule:        goArchive,
 		Outputs:     []string{archivePath},
 		Args: map[string]string{
-			"workDir": ctx.ModuleDir(),
-			"pkg":     tb.properties.name,
+			"workDir":  ctx.ModuleDir(),
+			"zipName":  archivePath,
+			"fileName": binaryPath,
 		},
 	})
 }
 
 func Archive_binFactory() (blueprint.Module, []interface{}) {
-	mType := &archive_binMod{}
+	mType := &goArchive_binModule{}
 	return mType, []interface{}{&mType.SimpleName.Properties, &mType.properties}
-}
-
-func ZipFiles(filename string, files []string) error {
-
-	newZipFile, err := os.Create(filename)
-	if err != nil {
-		return err
-	}
-	defer newZipFile.Close()
-
-	zipWriter := zip.NewWriter(newZipFile)
-	defer zipWriter.Close()
-
-	// Add files to zip
-	for _, file := range files {
-		if err = AddFileToZip(zipWriter, file); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func AddFileToZip(zipWriter *zip.Writer, filename string) error {
-
-	fileToZip, err := os.Open(filename)
-	if err != nil {
-		return err
-	}
-	defer fileToZip.Close()
-
-	info, err := fileToZip.Stat()
-	if err != nil {
-		return err
-	}
-
-	header, err := zip.FileInfoHeader(info)
-	if err != nil {
-		return err
-	}
-
-	header.Name = filename
-	header.Method = zip.Deflate
-
-	writer, err := zipWriter.CreateHeader(header)
-	if err != nil {
-		return err
-	}
-	_, err = io.Copy(writer, fileToZip)
-	return err
 }

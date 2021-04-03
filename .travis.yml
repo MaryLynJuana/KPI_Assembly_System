@@ -1,0 +1,18 @@
+language: go
+go:
+- 1.15.x
+
+before_script:
+  - sudo apt-get install zip
+addons:
+  apt:
+    update: true
+
+script:
+  - ./pre-commit
+  - cd build
+  - go build ./cmd/bood
+  - bood
+  - cd ../examples
+  - go build ../build/cmd/bood
+  - bood

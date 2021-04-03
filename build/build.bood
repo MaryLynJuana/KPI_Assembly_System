@@ -1,0 +1,24 @@
+go_tested_binary {
+  // Module (and output) name.
+  name: "tested_bin",
+
+  // Go package to build.
+  pkg: "./modules/gomodule",
+
+  // Build inputs.
+  srcs: ["./modules/gomodule/*.go", "../go.mod"],
+
+  // Go package to test.
+  testPkg: "./modules/gomodule/",
+
+  // Test inputs.
+  testSrcs: ["./modules/gomodule/*_test.go"]
+}
+
+go_archive_bin {
+  // Name of the archive
+  name: "tested_binary",
+
+  // Name of the binary to be generated
+  binary: "tested_bin"
+}
