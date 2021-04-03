@@ -3,7 +3,7 @@ go_tested_binary {
   name: "bood",
 
   // Go package to build.
-  pkg: "./cmd/bood",
+  pkg: "./...",
 
   // Build inputs.
   srcs: ["**/*.go", "../go.mod"],
@@ -15,7 +15,10 @@ go_tested_binary {
   testSrcs: ["**/*_test.go"]
 }
 
-archive_bin {
- name: "simple_build",
- binary: "simple_build_bin"
+go_archive_bin {
+  // Name of the package and archive
+  name: "simple_build",
+
+  // Name of the binary to be generated
+  binary: "simple_build_bin"
 }
