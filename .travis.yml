@@ -1,7 +1,13 @@
 language: go
-
 go:
 - 1.15.x
+
+before_script:
+  - sudo apt-get install zip
+  - sudo apt -y install ninja-build
+addons:
+  apt:
+    update: true
 
 script:
   - ./pre-commit
