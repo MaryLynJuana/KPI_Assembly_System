@@ -4,8 +4,7 @@ go:
 
 before_script:
   - sudo apt-get -y install ninja-build
-  - sudo apt-get -y upgrade ninja-build
-  - sudo apt-get install zip
+  - sudo apt-get -y install zip
 
 addons:
   apt:
