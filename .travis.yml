@@ -4,7 +4,7 @@ go:
 - 1.15.x
 
 before_script:
-  - sudo apt-get -y install ninja-build\
+  - sudo apt-get -y install ninja-build
   - sudo apt-get -y install zip
 
 addons:
@@ -12,7 +12,6 @@ addons:
     update: true
 
 script:
-  - ./pre-commit
   - cd build
   - go build ./cmd/bood
   - bood
