@@ -20,6 +20,7 @@ func TestSimpleBinFactory(t *testing.T) {
 			  testSrcs: ["test-src_test.go"],
 			  pkg: ".",
 			  testPkg: ".",
+			  optional: true,
 	          vendorFirst: true
 			}
 		`),

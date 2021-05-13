@@ -42,6 +42,8 @@ type goTestedBinaryModuleType struct {
 		VendorFirst bool
 
 		Deps []string
+
+		Optional bool
 	}
 }
 
@@ -93,6 +95,7 @@ func (gtb *goTestedBinaryModuleType) GenerateBuildActions(ctx blueprint.ModuleCo
 		Rule:        goBuild,
 		Outputs:     []string{outputPath},
 		Implicits:   inputs,
+		Optional: gtb.properties.Optional,
 		Args: map[string]string{
 			"outputPath": outputPath,
 			"workDir":    ctx.ModuleDir(),
@@ -112,10 +115,11 @@ func (gtb *goTestedBinaryModuleType) GenerateBuildActions(ctx blueprint.ModuleCo
 		return
 	}
 	ctx.Build(pctx, blueprint.BuildParams{
-		Description: "Test my module",
+		Description: fmt.Sprintf("Test %s module", name),
 		Rule:        goTest,
 		Outputs:     []string{testOutputPath},
 		Implicits:   inputs,
+		Optional: gtb.properties.Optional,
 		Args: map[string]string{
 			"outputPath": testOutputPath,
 			"workDir":    ctx.ModuleDir(),
