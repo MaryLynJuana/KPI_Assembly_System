@@ -3,7 +3,7 @@ module github.com/MaryLynJuana/KPI_Assembly_System
 go 1.15
 
 require (
-	github.com/google/blueprint v0.0.0-20200305182927-215230a3e856
+	github.com/google/blueprint v0.0.0-20210428185037-2f7d3dd6fb45
 	github.com/roman-mazur/bood v0.0.6
 )
 
